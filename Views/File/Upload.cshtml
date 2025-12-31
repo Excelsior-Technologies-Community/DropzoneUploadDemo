@@ -1,0 +1,77 @@
+﻿@model IEnumerable<DropzoneUploadDemo.Models.UploadedFile>
+
+@{
+    ViewData["Title"] = "File Upload";
+}
+
+<h3 class="mb-3">📤 Upload Files</h3>
+
+<form id="uploadForm" class="dropzone border rounded p-3 mb-3">
+</form>
+
+<div class="mb-4">
+    <button id="uploadBtn" class="btn btn-primary">
+        ⬆ Upload Files
+    </button>
+</div>
+
+<hr />
+
+<h4>📁 Uploaded Files</h4>
+
+<table class="table table-bordered table-striped mt-2">
+    <thead class="table-light">
+        <tr>
+            <th>#</th>
+            <th>File Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="3" class="text-center text-muted">
+                    No files uploaded yet
+                </td>
+            </tr>
+        }
+        else
+        {
+            int i = 1;
+            foreach (var f in Model)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@f.FileName</td>
+                </tr>
+                i++;
+            }
+        }
+    </tbody>
+</table>
+
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/dropzone@5/dist/min/dropzone.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/dropzone@5/dist/min/dropzone.min.js"></script>
+
+<script>
+    Dropzone.autoDiscover = false;
+
+    const myDropzone = new Dropzone("#uploadForm", {
+        url: "/File/UploadFile",
+        autoProcessQueue: false,   
+        maxFilesize: 5,
+        addRemoveLinks: true,
+        parallelUploads: 5
+    });
+
+    document.getElementById("uploadBtn")
+        .addEventListener("click", function () {
+            myDropzone.processQueue();
+        });
+
+    myDropzone.on("queuecomplete", function () {
+        location.reload(); 
+    });
+</script>
